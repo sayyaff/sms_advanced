@@ -91,7 +91,14 @@ internal class SmsSenderMethodHandler(
                 return
             }
         }
-        sms.sendTextMessage(address, null, body, sentPendingIntent, deliveredPendingIntent)
+        
+        if (body.toByteArray().size > 80) {
+            val partMessage = sms.divideMessage(body)
+            sms.sendMultipartTextMessage(address, null, partMessage, null, null)
+        } else {
+            sms.sendTextMessage(address, null, body, sentPendingIntent, deliveredPendingIntent)
+        }
+
         result.success(null)
     }
 
