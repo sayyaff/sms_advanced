@@ -335,7 +335,7 @@ class SmsSender {
     _sentMessages.putIfAbsent(_sentId, () => msg);
     map['sentId'] = _sentId;
     if (simCard != null) {
-      map['subId'] = simCard.slot;
+      map['subId'] = simCard.subId;
     }
     _sentId += 1;
 
@@ -525,13 +525,18 @@ class SimCard {
   int? slot;
   String? imei;
   SimCardState? state;
+  int? subId;
 
   SimCard(
       {required int this.slot,
       required String this.imei,
+      required int this.subId,
       this.state = SimCardState.Unknown});
 
   SimCard.fromJson(Map map) {
+    if (map.containsKey('subId')) {
+      subId = map['subId'];
+    }
     if (map.containsKey('slot')) {
       slot = map['slot'];
     }

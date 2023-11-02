@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.RequiresApi
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
 import com.elyudde.sms_advanced.permisions.Permissions
 import com.elyudde.sms_advanced.telephony.TelephonyManager
 import io.flutter.embedding.android.FlutterFragmentActivity
@@ -55,6 +57,12 @@ internal class SimCardsHandler(
             simCards
         }
     }
+    
+    fun getSubscriptionIdForSimSlotIndex(context: Context, simSlotIndex: Int): Int? {
+	    val subscriptionManager = SubscriptionManager.from(context)
+	    val subscriptionInfo = subscriptionManager.getActiveSubscriptionInfoForSimSlotIndex(simSlotIndex)
+	    return subscriptionInfo?.subscriptionId
+    }
 
     private val simCards: Unit
         @RequiresApi(Build.VERSION_CODES.M) private get() {
@@ -66,8 +74,10 @@ internal class SimCardsHandler(
                 val phoneCount = telephonyManager.simCount
                 for (i in 0 until phoneCount) {
                     val simCard = JSONObject()
+                    val subscriptionId = getSubscriptionIdForSimSlotIndex(context, i)
                     simCard.put("slot", i + 1)
                     simCard.put("imei", telephonyManager.getSimId(i))
+                    simCard.put("subId", subscriptionId)
                     simCard.put("state", telephonyManager.getSimState(i))
                     simCards.put(simCard)
                 }
