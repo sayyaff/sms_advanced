@@ -23,7 +23,7 @@ class TelephonyManager(private val context: Context) {
 
     @RequiresApi(Build.VERSION_CODES.M)
     fun getSimId(slotId: Int): String {
-        return manager!!.getDeviceId(slotId)
+        return "0"
     }
 
     fun getSimState(slotId: Int): Int {

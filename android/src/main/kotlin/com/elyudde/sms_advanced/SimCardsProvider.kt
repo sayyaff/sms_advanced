@@ -64,6 +64,12 @@ internal class SimCardsHandler(
 	    return subscriptionInfo?.subscriptionId
     }
 
+    fun getCarrierNameForSimSlotIndex(context: Context, simSlotIndex: Int): CharSequence? {
+	    val subscriptionManager = SubscriptionManager.from(context)
+	    val subscriptionInfo = subscriptionManager.getActiveSubscriptionInfoForSimSlotIndex(simSlotIndex)
+	    return subscriptionInfo?.getCarrierName()
+    }
+
     private val simCards: Unit
         @RequiresApi(Build.VERSION_CODES.M) private get() {
             val simCards = JSONArray()
@@ -77,6 +83,7 @@ internal class SimCardsHandler(
                     val subscriptionId = getSubscriptionIdForSimSlotIndex(context, i)
                     simCard.put("slot", i + 1)
                     simCard.put("imei", telephonyManager.getSimId(i))
+                    simCard.put("carrier", getCarrierNameForSimSlotIndex(context, i))
                     simCard.put("subId", subscriptionId)
                     simCard.put("state", telephonyManager.getSimState(i))
                     simCards.put(simCard)

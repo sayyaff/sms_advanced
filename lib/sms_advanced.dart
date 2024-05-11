@@ -341,6 +341,7 @@ class SmsSender {
 
     if (simCard != null) {
       map['simCard'] = simCard.imei;
+      map['carrier'] = simCard.carrier;
     }
 
     if (!kIsWeb && Platform.isIOS) {
@@ -524,12 +525,14 @@ enum SimCardState {
 class SimCard {
   int? slot;
   String? imei;
+  String? carrier;
   SimCardState? state;
   int? subId;
 
   SimCard(
       {required int this.slot,
       required String this.imei,
+      required String this.carrier,
       required int this.subId,
       this.state = SimCardState.Unknown});
 
@@ -542,6 +545,9 @@ class SimCard {
     }
     if (map.containsKey('imei')) {
       imei = map['imei'];
+    }
+    if (map.containsKey('carrier')) {
+      carrier = map['carrier'];
     }
     if (map.containsKey('state')) {
       switch (map['state']) {
